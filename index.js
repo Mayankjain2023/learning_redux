@@ -2,7 +2,14 @@ const redux = require('redux');
 const createStore = redux.createStore;
 const bindActionCreators = redux.bindActionCreators;
 
+//logger for logging whatever happends between dispatching the action and updating the state in the store
+const reduxLogger = require('redux-logger');
+const logger = reduxLogger.createLogger()
+const applyMiddleware = redux.applyMiddleware //middleware accepts a function (so we need logger to be a function provided by redux.createLogger())
+
 const combineReducers = redux.combineReducers
+
+
 
 const CAKE_ORDERED = 'CAKE_ORDERED';
 const CAKE_RESTOCKED = 'CAKE_RESTOCKED';
@@ -94,7 +101,7 @@ function iceCreamReducer(state = iceCreamState,action){
 const reducer = combineReducers({cake:cakeReducer,iceCream:iceCreamReducer})
 
 
-const store = createStore(reducer) // first principle
+const store = createStore(reducer,applyMiddleware(logger)) // first principle
 console.log("initial state",store.getState());
 
 const unsubscribe = store.subscribe(()=>{console.log("Current state",store.getState())});
